@@ -1,0 +1,204 @@
+The SAS System                              14:21 Friday, October 25, 2002   1
+
+Obs    subject    time    conc
+
+  1       1       0.25    1.50
+  2       1       0.50    0.94
+  3       1       0.75    0.78
+  4       1       1.00    0.48
+  5       1       1.25    0.37
+  6       1       2.00    0.19
+  7       1       3.00    0.12
+  8       1       4.00    0.11
+  9       1       5.00    0.08
+ 10       1       6.00    0.07
+ 11       1       8.00    0.05
+ 12       2       0.25    2.03
+ 13       2       0.50    1.63
+ 14       2       0.75    0.71
+ 15       2       1.00    0.70
+ 16       2       1.25    0.64
+ 17       2       2.00    0.36
+ 18       2       3.00    0.32
+ 19       2       4.00    0.20
+ 20       2       5.00    0.25
+ 21       2       6.00    0.12
+ 22       2       8.00    0.08
+ 23       3       0.25    2.72
+ 24       3       0.50    1.49
+ 25       3       0.75    1.16
+ 26       3       1.00    0.80
+ 27       3       1.25    0.80
+ 28       3       2.00    0.39
+ 29       3       3.00    0.22
+ 30       3       4.00    0.12
+ 31       3       5.00    0.11
+ 32       3       6.00    0.08
+ 33       3       8.00    0.08
+ 34       4       0.25    1.85
+ 35       4       0.50    1.39
+ 36       4       0.75    1.02
+ 37       4       1.00    0.89
+ 38       4       1.25    0.59
+ 39       4       2.00    0.40
+ 40       4       3.00    0.16
+ 41       4       4.00    0.11
+ 42       4       5.00    0.10
+ 43       4       6.00    0.07
+ 44       4       8.00    0.07
+ 45       5       0.25    2.05
+ 46       5       0.50    1.04
+ 47       5       0.75    0.81
+ 48       5       1.00    0.39
+ 49       5       1.25    0.30
+ 50       5       2.00    0.23
+ 51       5       3.00    0.13
+ 52       5       4.00    0.11
+ 53       5       5.00    0.08
+ 54       5       6.00    0.10
+ 55       5       8.00    0.06
+ 56       6       0.25    2.31
+ 57       6       0.50    1.44
+ 58       6       0.75    1.03
+ 59       6       1.00    0.84
+ 60       6       1.25    0.64
+ 61       6       2.00    0.42
+ 62       6       3.00    0.24
+ 63       6       4.00    0.17
+ 64       6       5.00    0.13
+ 65       6       6.00    0.10
+ 66       6       8.00    0.09
+ODE: Numerical solution                     14:21 Friday, October 25, 2002   2
+
+The Mixed Procedure
+
+                  Model Information
+
+Data Set                     WORK._NLINMIX            
+Dependent Variable           PSEUDO_CONC              
+Covariance Structure         Variance Components      
+Subject Effect               subject                  
+Estimation Method            REML                     
+Residual Variance Method     Profile                  
+Fixed Effects SE Method      Model-Based              
+Degrees of Freedom Method    Containment              
+
+
+              Class Level Information
+ 
+Class      Levels    Values
+
+subject         6    1 2 3 4 5 6                   
+
+
+            Dimensions
+
+Covariance Parameters             3
+Columns in X                      4
+Columns in Z Per Subject          2
+Subjects                          6
+Max Obs Per Subject              11
+Observations Used                66
+Observations Not Used             0
+Total Observations               66
+
+
+                               Parameter Search
+ 
+   CovP1     CovP2     CovP3  Variance          Res Log Like  -2 Res Log Like
+
+  0.4000   0.06326  0.007153  0.007153               50.9736        -101.9473
+
+
+                     Iteration History
+ 
+Iteration    Evaluations    -2 Res Log Like       Criterion
+
+        1              1      -101.94727148      0.00000000
+
+
+                   Convergence criteria met.                    
+
+
+ Covariance Parameter Estimates
+ 
+Cov Parm     Subject    Estimate
+
+D_U0         subject      0.4000
+D_U01        subject     0.06326
+Residual                0.007153
+
+
+              Fit Statistics
+
+Res Log Likelihood                    51.0
+Akaike's Information Criterion        48.0
+Schwarz's Bayesian Criterion          48.3
+-2 Res Log Likelihood               -101.9
+
+
+  PARMS Model Likelihood Ratio Test
+ 
+    DF    Chi-Square      Pr > ChiSq
+
+     2          0.00          1.0000
+
+
+                         Solution for Fixed Effects
+ 
+                           Standard
+Effect         Estimate       Error      DF    t Value    Pr > |t|     Alpha
+
+D_Q0             3.3712      0.2996      52      11.25      <.0001      0.05
+D_K01            1.1724      0.1304      52       8.99      <.0001      0.05
+D_K21            0.8623      0.1192      52       7.23      <.0001      0.05
+D_K12            0.7152      0.1667      52       4.29      <.0001      0.05
+
+    Solution for Fixed Effects
+ 
+Effect            Lower       Upper
+
+D_Q0             2.7700      3.9723
+D_K01            0.9107      1.4340
+D_K21            0.6231      1.1016
+D_K12            0.3807      1.0498
+
+
+ODE: Numerical solution                     14:21 Friday, October 25, 2002   3
+
+The Mixed Procedure
+
+                        Solution for Random Effects
+ 
+                               Std Err
+Effect   subject   Estimate       Pred     DF   t Value   Pr > |t|    Alpha
+
+D_U0     1          -0.8589     0.3048     52     -2.82     0.0068     0.05
+D_U01    1          0.03099     0.1558     52      0.20     0.8431     0.05
+D_U0     2         -0.09883     0.3006     52     -0.33     0.7437     0.05
+D_U01    2          -0.1402     0.1348     52     -1.04     0.3029     0.05
+D_U0     3           0.9239     0.3101     52      2.98     0.0044     0.05
+D_U01    3          0.04418     0.1322     52      0.33     0.7396     0.05
+D_U0     4          -0.3843     0.2972     52     -1.29     0.2017     0.05
+D_U01    4          -0.2477     0.1336     52     -1.85     0.0694     0.05
+D_U0     5           0.1723     0.3191     52      0.54     0.5915     0.05
+D_U01    5           0.4084     0.1558     52      2.62     0.0114     0.05
+D_U0     6           0.2458     0.3027     52      0.81     0.4205     0.05
+D_U01    6         -0.09567     0.1330     52     -0.72     0.4753     0.05
+
+      Solution for Random Effects
+ 
+Effect   subject      Lower       Upper
+
+D_U0     1          -1.4704     -0.2473
+D_U01    1          -0.2816      0.3436
+D_U0     2          -0.7021      0.5044
+D_U01    2          -0.4107      0.1302
+D_U0     3           0.3015      1.5462
+D_U01    3          -0.2211      0.3094
+D_U0     4          -0.9806      0.2120
+D_U01    4          -0.5157     0.02038
+D_U0     5          -0.4680      0.8126
+D_U01    5          0.09581      0.7210
+D_U0     6          -0.3617      0.8534
+D_U01    6          -0.3626      0.1713

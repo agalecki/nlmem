@@ -1,0 +1,111 @@
+                                                     The SAS System                    15:44 Friday, October 25, 2002   1
+
+                                                   The Mixed Procedure
+
+                                                   Model Information
+
+                                 Data Set                     WORK._NLINMIX            
+                                 Dependent Variable           PSEUDO_Y                 
+                                 Covariance Structure         Unstructured             
+                                 Subject Effect               tree                     
+                                 Estimation Method            REML                     
+                                 Residual Variance Method     Profile                  
+                                 Fixed Effects SE Method      Model-Based              
+                                 Degrees of Freedom Method    Containment              
+
+
+                                                 Class Level Information
+ 
+                                    Class    Levels    Values
+
+                                    tree          5    1 2 3 4 5                     
+
+
+                                                       Dimensions
+
+                                           Covariance Parameters             4
+                                           Columns in X                      3
+                                           Columns in Z Per Subject          2
+                                           Subjects                          5
+                                           Max Obs Per Subject               7
+                                           Observations Used                35
+                                           Observations Not Used             0
+                                           Total Observations               35
+
+
+                                                     Parameter Search
+ 
+              CovP1       CovP2       CovP3       CovP4    Variance            Res Log Like    -2 Res Log Like
+
+            1509.11     31.9989      1.3445     58.0139     58.0139               -134.4025           268.8051
+
+
+                                                    Iteration History
+ 
+                               Iteration    Evaluations    -2 Res Log Like       Criterion
+
+                                       1              1       268.80507333      0.00000000
+
+
+                                               Convergence criteria met.                    
+
+
+                                             Covariance Parameter Estimates
+ 
+                                            Cov Parm     Subject    Estimate
+
+                                            UN(1,1)      tree        1509.11
+                                            UN(2,1)      tree        31.9989
+                                            UN(2,2)      tree         1.3445
+                                            Residual                 58.0139
+
+
+                                                     Fit Statistics
+
+                                       Res Log Likelihood                  -134.4
+                                       Akaike's Information Criterion      -138.4
+                                       Schwarz's Bayesian Criterion        -137.6
+                                       -2 Res Log Likelihood                268.8
+
+
+                                            PARMS Model Likelihood Ratio Test
+ 
+                                              DF    Chi-Square      Pr > ChiSq
+
+                                               3          0.00          1.0000
+
+
+                                               Solution for Fixed Effects
+ 
+                                    Standard
+            Effect      Estimate       Error      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+            D_B1          190.73     18.4021      24      10.36      <.0001      0.05      152.75      228.71
+            D_B2          7.9454      0.9715      24       8.18      <.0001      0.05      5.9403      9.9505
+            D_B3        -0.00290    0.000212      24     -13.67      <.0001      0.05    -0.00334    -0.00246
+
+
+                                               Solution for Random Effects
+ 
+                                        Std Err
+         Effect    tree    Estimate        Pred      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+         D_U1      1       -34.8434     18.0822      24      -1.93      0.0659      0.05    -72.1633      2.4766
+         D_U2      1        -1.1443      0.8408      24      -1.36      0.1862      0.05     -2.8796      0.5910
+         D_U1      2        32.5401     18.1721      24       1.79      0.0860      0.05     -4.9652     70.0454
+         D_U2      2         0.3001      0.7975      24       0.38      0.7100      0.05     -1.3457      1.9460
+         D_U1      3       -40.6906     18.0833      24      -2.25      0.0339      0.05    -78.0126     -3.3685
+         D_U2      3        -0.7936      0.8451      24      -0.94      0.3570      0.05     -2.5378      0.9505
+         D_U1      4        44.4012     18.2063      24       2.44      0.0225      0.05      6.8251     81.9772
+         D_U2      4         0.8252      0.7914      24       1.04      0.3075      0.05     -0.8082      2.4586
+                                                     The SAS System                    15:44 Friday, October 25, 2002   2
+
+                                                   The Mixed Procedure
+
+                                               Solution for Random Effects
+ 
+                                        Std Err
+         Effect    tree    Estimate        Pred      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+         D_U1      5        -1.4073     18.1040      24      -0.08      0.9387      0.05    -38.7721     35.9575
+         D_U2      5         0.8126      0.8176      24       0.99      0.3302      0.05     -0.8748      2.5000

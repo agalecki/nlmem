@@ -1,0 +1,95 @@
+                                                     The SAS System                    12:21 Friday, October 25, 2002   1
+
+                                                   The Mixed Procedure
+
+                                                   Model Information
+
+                                 Data Set                     WORK._NLINMIX            
+                                 Dependent Variable           pseudo_y                 
+                                 Covariance Structure         Variance Components      
+                                 Subject Effect               tree                     
+                                 Estimation Method            REML                     
+                                 Residual Variance Method     Profile                  
+                                 Fixed Effects SE Method      Model-Based              
+                                 Degrees of Freedom Method    Containment              
+
+
+                                                 Class Level Information
+ 
+                                    Class    Levels    Values
+
+                                    tree          5    1 2 3 4 5                     
+
+
+                                                       Dimensions
+
+                                           Covariance Parameters             2
+                                           Columns in X                      3
+                                           Columns in Z Per Subject          1
+                                           Subjects                          5
+                                           Max Obs Per Subject               7
+                                           Observations Used                35
+                                           Observations Not Used             0
+                                           Total Observations               35
+
+
+                                                     Parameter Search
+ 
+                          CovP1       CovP2    Variance            Res Log Like    -2 Res Log Like
+
+                        1245.57     65.9372     65.9372               -135.1580           270.3160
+
+
+                                                    Iteration History
+ 
+                               Iteration    Evaluations    -2 Res Log Like       Criterion
+
+                                       1              1       270.31599613      0.00000000
+
+
+                                               Convergence criteria met.                    
+
+
+                                             Covariance Parameter Estimates
+ 
+                                            Cov Parm     Subject    Estimate
+
+                                            d_u1         tree        1245.57
+                                            Residual                 65.9372
+
+
+                                                     Fit Statistics
+
+                                       Res Log Likelihood                  -135.2
+                                       Akaike's Information Criterion      -137.2
+                                       Schwarz's Bayesian Criterion        -136.8
+                                       -2 Res Log Likelihood                270.3
+
+
+                                            PARMS Model Likelihood Ratio Test
+ 
+                                              DF    Chi-Square      Pr > ChiSq
+
+                                               1          0.00          1.0000
+
+
+                                               Solution for Fixed Effects
+ 
+                                    Standard
+            Effect      Estimate       Error      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+            d_b1          191.19     17.1077      28      11.18      <.0001      0.05      156.14      226.23
+            d_b2          8.1531      0.8937      28       9.12      <.0001      0.05      6.3223      9.9839
+            d_b3        -0.00290    0.000227      28     -12.80      <.0001      0.05    -0.00337    -0.00244
+
+
+                                               Solution for Random Effects
+ 
+                                        Std Err
+         Effect    tree    Estimate        Pred      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+         d_u1      1       -29.5104     16.3341      28      -1.81      0.0816      0.05    -62.9693      3.9485
+         d_u1      2        31.6782     16.3383      28       1.94      0.0627      0.05     -1.7893     65.1457
+         d_u1      3       -37.1334     16.3503      28      -2.27      0.0310      0.05    -70.6254     -3.6414
+         d_u1      4        40.1620     16.3577      28       2.46      0.0206      0.05      6.6548     73.6693
+         d_u1      5        -5.1965     16.3072      28      -0.32      0.7523      0.05    -38.6003     28.2074

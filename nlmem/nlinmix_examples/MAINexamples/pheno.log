@@ -1,0 +1,277 @@
+1                                                          The SAS System                             12:21 Friday, October 25, 2002
+
+NOTE: Copyright (c) 1999 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Version 8 (TS M0)
+      Licensed to UNIVERSITY OF MICHIGAN, Site 0009403007.
+NOTE: This session is executing on the SunOS 5.6 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.07 seconds
+      cpu time            0.06 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /u11/sas800/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          
+2          /*----------------------------------------------------------------*/
+3          /*--                                                            --*/
+4          /*-- Title:    Examples with phenobarbital data                 --*/
+5          /*-- Filename: pheno.sas                                        --*/
+6          /*--           Invokes pheno_dt.sas                             --*/
+7          /*-- Date:     April 4, 2000                                    --*/
+8          /*--                                                            --*/
+9          /*-- Ref:                                                       --*/
+10         /*--  1.Grasela, T.H., Jr. and Donn, SM                         --*/
+11         /*--    Neonatal population pharmacokinetics for                --*/
+12         /*--    phenobarbital derived from routine clinical data        --*/
+13         /*--    Dev. Pharmacol. Ther. 8(1985), 374-383                  --*/
+14         /*--                                                            --*/
+15         /*--  2.Littel, R.C., Miliken, G.A., Stroup, W.A., Wolfinger R.D.-*/
+16         /*--    SAS System for Mixed Models                             --*/
+17         /*--    SAS Institute, 1996                                     --*/
+18         /*--                                                            --*/
+19         /*----------------------------------------------------------------*/
+20         
+21         libname lib '.';
+NOTE: Libref LIB was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: /u11/HTML/USERS/pub/nlmem/nlinmix_examples/MAINexamples
+22         
+23         *options date notes number;
+24         
+25         
+26         %let path=../..;
+27         filename pheno_dt "&path/datasets/pheno_dt.sas";
+28         filename nlinmix "&path/nlmm800.sas";
+29         %include pheno_dt;
+
+NOTE: The data set WORK.PHENO has 744 observations and 8 variables.
+NOTE: DATA statement used:
+      real time           0.04 seconds
+      cpu time            0.04 seconds
+      
+
+793        %include  nlinmix / nosource;
+2031       
+2032       /* Example 1. Numerical derivatives   */
+2033       /* tmp array has been used instead of _temporary_ */
+2034       
+2035       Title " Pheno data. Example 1. Numerical  derivatives.";
+2036       
+2037       %nlinmix(data=pheno,
+2038                stmts   =  %str(class indiv;
+2039                    model pseudo_conc = d_beta1 d_beta2 d_beta3
+2040                                      / noint notest solution cl;
+2041                random d_u1 d_u2 / subject=indiv solution cl;
+2042                weight _weight_;
+2043                ods output Iterhistory=iter;
+2044                             )
+2045       ,
+2046              modinit = %str(
+2047                             retain _tmp1 - _tmp12;
+2048                             array  _tmp{12} _tmp1 - _tmp12;
+2049       
+2050                             if (newsub=1) then
+2051                               do call=1 to 12;
+2052                               _tmp{call}= 0;
+2053                               end;
+2054       
+2055                             call=0;
+2056                            ),
+2057              model   =  %str(
+2058                              call =call+1;
+2059                              prd0= _tmp{call};
+2060       
+2061                              clear=beta1*weight*exp(u1);
+2062                              vol = beta2*weight*(1+beta3*apgarlow)*exp(u2);
+2063                              eterm=exp(-(time-tlag)*clear/vol);
+2                                                    The SAS System                        12:21 Friday, October 25, 2002
+
+2064                              predv =dose/vol +prd0*eterm;
+2065       
+2066                              _tmp{call}=predv;
+2067                              ),
+2068       
+2069              weight  =  %str( _weight_=1/predv**2;),
+2070              parms   =  %str(beta1=.01 beta2=1 beta3=.1),
+2071              expand  =  zero,
+2072              options =  debug
+2073       );
+model =                         call =call+1;                        prd0= _tmp{call};                         
+clear=beta1*weight*exp(u1);                        vol = beta2*weight*(1+beta3*apgarlow)*exp(u2);                        
+eterm=exp(-(time-tlag)*clear/vol);                        predv =dose/vol +prd0*eterm;                         
+_tmp{call}=predv;                        
+derivatives =
+fixed = beta1 beta2 beta3
+d_fixed = d_beta1 d_beta2 d_beta3
+random = u1 u2
+d_random = d_u1 d_u2
+options =DEBUG
+expand  =zero
+expandu =ZERO
+expandn =0 0
+
+                          The NLINMIX Macro
+
+           Data Set                     : pheno
+           Response                     : conc
+           Fixed-Effect Parameters      : beta1 beta2 beta3
+           Random-Effect Parameters     : u1 u2
+           Expansion Point              : zero
+
+
+Calling PROC NLIN to initialize.
+WARNING: PROC NLIN failed to converge.
+WARNING: Variable d_beta1 was not found on DATA file.
+WARNING: Variable d_beta2 was not found on DATA file.
+WARNING: Variable d_beta3 was not found on DATA file.
+WARNING: Variable d_u1 was not found on DATA file.
+WARNING: Variable d_u2 was not found on DATA file.
+WARNING: Variable _tmp1 was not found on DATA file.
+WARNING: Variable _tmp2 was not found on DATA file.
+WARNING: Variable _tmp3 was not found on DATA file.
+WARNING: Variable _tmp4 was not found on DATA file.
+WARNING: Variable _tmp5 was not found on DATA file.
+WARNING: Variable _tmp6 was not found on DATA file.
+WARNING: Variable _tmp7 was not found on DATA file.
+WARNING: Variable _tmp8 was not found on DATA file.
+WARNING: Variable _tmp9 was not found on DATA file.
+WARNING: Variable _tmp10 was not found on DATA file.
+WARNING: Variable _tmp11 was not found on DATA file.
+WARNING: Variable _tmp12 was not found on DATA file.
+WARNING: Variable call was not found on DATA file.
+WARNING: Variable prd0 was not found on DATA file.
+WARNING: Variable clear was not found on DATA file.
+WARNING: Variable vol was not found on DATA file.
+WARNING: Variable eterm was not found on DATA file.
+WARNING: Variable predv was not found on DATA file.
+WARNING: Variable pseudo_conc was not found on DATA file.
+WARNING: Variable _pseudoy was not found on DATA file.
+WARNING: Variable _weight_ was not found on DATA file.
+WARNING: Variable _b0 was not found on DATA file.
+WARNING: Variable _tol was not found on DATA file.
+WARNING: Variable _predl was not found on DATA file.
+WARNING: Variable _predu was not found on DATA file.
+WARNING: Variable _u0 was not found on DATA file.
+Ignore warning message(s) listed above of the type:
+Variable X was not found on DATA file.
+Iteratively calling PROC MIXED.
+   PROC MIXED call 0
+   
+iteration = 0
+convergence criterion = .
+beta1=0.0047991795 beta2=0.950986376 beta3=0.218640263 COVP1=0.0457170539 COVP2=0.0283124342 COVP3=0.0107382031
+   PROC MIXED call 1
+   
+iteration = 1
+convergence criterion = 0.003518302
+beta1=0.004656755 beta2=0.967283074 beta3=0.1435858723 COVP1=0.0456877183 COVP2=0.0282466065 COVP3=0.0107693768
+   PROC MIXED call 2
+   
+iteration = 2
+convergence criterion = 0.0000835445
+beta1=0.0046537705 beta2=0.9672609798 beta3=0.1471041743 COVP1=0.0456672723 COVP2=0.0282710609 COVP3=0.0107767986
+   PROC MIXED call 3
+   
+iteration = 3
+convergence criterion = 5.2497129E-7
+beta1=0.0046538742 beta2=0.9672522101 beta3=0.1471877188 COVP1=0.0456677973 COVP2=0.0282713859 COVP3=0.0107769225
+   PROC MIXED call 4
+   
+iteration = 4
+convergence criterion = 1.823917E-8
+beta1=0.0046538758 beta2=0.9672523117 beta3=0.1471881916 COVP1=0.0456678156 COVP2=0.0282713972 COVP3=0.0107769268
+   PROC MIXED call 5
+   
+iteration = 5
+convergence criterion = 1.128784E-10
+                                                     The SAS System
+
+beta1=0.0046538758 beta2=0.9672523126 beta3=0.1471881929 COVP1=0.0456678157 COVP2=0.0282713972 COVP3=0.0107769268
+NLINMIX convergence criteria met.
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      2073:71   
+NOTE: Missing values were generated as a result of performing an operation on missing values.
+      Each place is given by: (Number of times) at (Line):(Column).
+      589 at 2073:61   
+NOTE: There were 744 observations read from the dataset WORK._NLINMIX.
+NOTE: The data set WORK._NLINMIX has 744 observations and 45 variables.
+NOTE: DATA statement used:
+      real time           0.10 seconds
+      cpu time            0.11 seconds
+      
+
+
+NOTE: There were 744 observations read from the dataset WORK._NLINMIX.
+NOTE: The data set WORK.DEBUG has 744 observations and 48 variables.
+NOTE: DATA statement used:
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+
+NOTE: There were 30 observations read from the dataset WORK.DEBUG.
+NOTE: The PROCEDURE PRINT printed pages 3-4.
+NOTE: PROCEDURE PRINT used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: Appending WORK.DEBUG to WORK.ALLDEBUG.
+NOTE: There were 744 observations read from the dataset WORK.DEBUG.
+NOTE: 744 observations added.
+NOTE: The data set WORK.ALLDEBUG has 6696 observations and 48 variables.
+NOTE: PROCEDURE APPEND used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+   PROC MIXED call 6
+
+NOTE: 589 observations are not included because of missing values.
+NOTE: Convergence criteria met.
+NOTE: The data set WORK._SOLNR has 118 observations and 10 variables.
+NOTE: The data set WORK._COV has 3 observations and 3 variables.
+NOTE: The data set WORK._SOLN has 3 observations and 9 variables.
+NOTE: The data set WORK._FIT has 4 observations and 2 variables.
+NOTE: The data set WORK.ITER has 1 observations and 4 variables.
+NOTE: There were 744 observations read from the dataset WORK._NLINMIX.
+NOTE: There were 3 observations read from the dataset WORK._COVSAVE.
+NOTE: The PROCEDURE MIXED printed pages 5-7.
+NOTE: PROCEDURE MIXED used:
+      real time           0.19 seconds
+      cpu time            0.20 seconds
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      2073:51   
+NOTE: There were 4 observations read from the dataset WORK._FIT.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+2074       run;
+2075       
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           7.98 seconds
+      cpu time            6.98 seconds
+      

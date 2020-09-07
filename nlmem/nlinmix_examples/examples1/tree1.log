@@ -1,0 +1,179 @@
+1                                                          The SAS System                             13:06 Friday, October 25, 2002
+
+NOTE: Copyright (c) 1999 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Version 8 (TS M0)
+      Licensed to UNIVERSITY OF MICHIGAN, Site 0009403007.
+NOTE: This session is executing on the SunOS 5.6 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.07 seconds
+      cpu time            0.07 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /u11/sas800/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          **options mprint;
+2          options nocenter ls=72 ps=77;
+3          
+4          /*
+5          tree1.sas illustrates how does switch= argument work
+6                    In previous version of NLINMIX (May 2000) switch
+6        ! did not work
+7                       properly
+8                    Note that NLINMIX does not converge, because
+8        ! maxit=2
+9          
+10         */
+11         
+12         /*---Orange trees data, Draper and Smith, 1981, p. 524, and
+13              Lindstrom and Bates, Biometrics, 1990, 673-687---*/
+14         
+15         %let path=../..;
+16         filename tree_dt "&path/datasets/tree_dt.sas";
+17         filename nlinmix "&path/nlmm800.sas";
+18         %include tree_dt;
+
+NOTE: The data set WORK.TREE has 35 observations and 4 variables.
+NOTE: DATA statement used:
+      real time           0.02 seconds
+      cpu time            0.02 seconds
+      
+
+62         %include  nlinmix / nosource;
+1300       
+1301       
+1302       /*---logistic model---*/
+1303       %nlinmix(data=tree,
+1304          model=%str(
+1305             num = b1+u1;
+1306             e = exp(b3*x);
+1307             den = 1 + (b2+u2)*e;
+1308             predv = num/den;
+1309          ),
+1310          derivs=%str(
+1311          d_b1=1/den;
+1312          d_b2=-num/den/den*e;
+1313          /* d_b3=-num/den/den*b2*x*e; */
+1314          d_u1=d_b1;
+1315          d_u2=d_b2;
+1316          ),
+1317          parms=%str(b1=190 b2=10 b3=-.003),
+1318          stmts=%str(
+1319             class tree;
+1320             model pseudo_y = d_b1 d_b2 d_b3 / noint notest solution
+1320     !  cl;
+2 The SAS System                          13:06 Friday, October 25, 2002
+
+1321             random d_u1 d_u2/ subject=tree solution cl type=un;
+1322          ),
+1323          expand= eblup,
+1324          switch=2,
+1325          options= debug,
+1326          maxit=2
+1327       )
+model =        num = b1+u1;       e = exp(b3*x);       den = 1 + 
+(b2+u2)*e;       predv = num/den;    
+derivatives =     d_b1=1/den;    d_b2=-num/den/den*e;        d_u1=d_b1; 
+   d_u2=d_b2;    
+fixed = b1 b2 b3
+d_fixed = d_b1 d_b2 d_b3
+random = u1 u2
+d_random = d_u1 d_u2
+options =DEBUG
+expand  =eblup
+expandu =ZERO
+expandn =1 1
+
+                          The NLINMIX Macro
+
+           Data Set                     : tree
+           Response                     : y
+           Fixed-Effect Parameters      : b1 b2 b3
+           Random-Effect Parameters     : u1 u2
+           Expansion Point              : eblup
+
+
+Calling PROC NLIN to initialize.
+WARNING: Variable d_b1 was not found on DATA file.
+WARNING: Variable d_b2 was not found on DATA file.
+WARNING: Variable d_b3 was not found on DATA file.
+WARNING: Variable d_u1 was not found on DATA file.
+WARNING: Variable d_u2 was not found on DATA file.
+WARNING: Variable num was not found on DATA file.
+WARNING: Variable e was not found on DATA file.
+WARNING: Variable den was not found on DATA file.
+WARNING: Variable predv was not found on DATA file.
+WARNING: Variable pseudo_y was not found on DATA file.
+WARNING: Variable _pseudoy was not found on DATA file.
+WARNING: Variable _b0 was not found on DATA file.
+WARNING: Variable _tol was not found on DATA file.
+WARNING: Variable _predl was not found on DATA file.
+WARNING: Variable _predu was not found on DATA file.
+WARNING: Variable _u0 was not found on DATA file.
+Ignore warning message(s) listed above of the type:
+Variable X was not found on DATA file.
+Iteratively calling PROC MIXED.
+   PROC MIXED call 0
+   
+iteration = 0
+convergence criterion = .
+b1=192.68780246 b2=7.8565875932 b3=-0.002828586 COVP1=1578.8088905 
+COVP2=32.943438583 COVP3=1.2060345321 COVP4=57.969859963
+   PROC MIXED call 1
+   
+iteration = 1
+convergence criterion = 3.9019766E-7
+b1=192.68758136 b2=7.8565647966 b3=-0.002828585 COVP1=1578.8082744 
+COVP2=32.943425728 COVP3=1.2060340615 COVP4=57.969837343
+Switching from EXPAND=ZERO to EXPAND=EBLUP
+   PROC MIXED call 2
+   
+iteration = 0
+convergence criterion = 3.9019766E-7
+b1=192.68757947 b2=7.8565650591 b3=-0.002828585 COVP1=1578.8082644 
+COVP2=32.94342552 COVP3=1.2060340539 COVP4=57.969836976
+   PROC MIXED call 3
+   
+iteration = 1
+convergence criterion = 0.0750433992
+b1=192.68757936 b2=7.856565068 b3=-0.002828585 COVP1=1517.8474199 
+COVP2=32.602393862 COVP3=1.3038817744 COVP4=58.180680709
+The SAS System
+
+   PROC MIXED call 4
+   
+iteration = 2
+convergence criterion = 0.0094843696
+b1=190.55367781 b2=7.9141897232 b3=-0.002898468 COVP1=1524.6433111 
+COVP2=32.914567789 COVP3=1.2959714084 COVP4=58.25041083
+NLINMIX did not converge.
+1328       run;
+1329       
+1330       proc print data=alldebug;
+1331       run;
+
+NOTE: There were 245 observations read from the dataset WORK.ALLDEBUG.
+NOTE: The PROCEDURE PRINT printed pages 3-18.
+NOTE: PROCEDURE PRINT used:
+      real time           0.12 seconds
+      cpu time            0.13 seconds
+      
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           3.47 seconds
+      cpu time            2.90 seconds
+      

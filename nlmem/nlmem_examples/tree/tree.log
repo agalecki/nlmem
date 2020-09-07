@@ -1,0 +1,250 @@
+1                                                          The SAS System                             14:39 Monday, October 28, 2002
+
+NOTE: Copyright (c) 1999 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Version 8 (TS M0)
+      Licensed to UNIVERSITY OF MICHIGAN, Site 0009403007.
+NOTE: This session is executing on the SunOS 5.6 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /u11/sas800/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          /*
+2          ORANGE TREE DATA.
+3          LOGISTIC GROWTH MODEL.
+4          ANALYTICAL SPECIFICATION
+5          
+6          RANDOM    U1
+7          NEXT      =1         Default
+8          SKIPNLIN  no
+9          DEBUG     blank
+10         DERIVS    blank
+11         APPEND    blank
+12         OPTIONS   DEBUG
+13         CPU time: 6.6 secs
+14         */
+15         
+16         
+17         /*---Orange trees data, Draper and Smith, 1981, p. 524, and
+18              Lindstrom and Bates, Biometrics, 1990, 673-687---
+19         */
+20         
+21         %let path=../..;
+22         filename tree_dt "&path/datasets/tree_dt.sas";
+23         filename nlinmix "&path/nlmm800.sas";
+24         filename nlmem   "&path/nlmem.sas";
+25         %include tree_dt;
+
+NOTE: The data set WORK.TREE has 35 observations and 4 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+69         %inc  nlinmix / nosource;
+1307       
+1308       /*---logistic model---*/
+1309       %nlinmix(data=tree,
+1310          model=%str(
+1311             num = _b[1]+_u[1];
+1312             e = exp(_b[3]*x);
+1313             den = 1 + _b[2]*e;
+1314             predv = num/den;
+1315          ),
+1316       
+1317          parms=%str(b1=150 b2=10 b3=-.001),
+1318          stmts=%str(
+1319             class tree;
+1320             model pseudo_y = d_b1 d_b2 d_b3 / noint notest solution cl;
+1321             random d_u1 / subject=tree solution cl;
+1322             ),
+1323          expand   = eblup,
+1324          options  = debug,
+1325          nlmem    = nlmem
+1326       );
+model =        num = _b[1]+_u[1];       e = exp(_b[3]*x);       den = 1 + _b[2]*e;       predv = num/den;    
+derivatives =
+fixed = b1 b2 b3
+d_fixed = d_b1 d_b2 d_b3
+random = u1
+d_random = d_u1
+options =DEBUG
+expand  =eblup
+expandu =EBLUP
+expandn =1
+subject  =
+next     = 1
+imlnlin  = default_nlin default_objf default_initobjf
+imlnlinw = default_nlin default_objf default_initobjf
+dtmplt   =
+dbtmplt  =
+dutmplt  =
+next    = 1
+read    = _readn
+subject =
+                                                     The SAS System
+
+xvar    = _one
+tvar    = time tree x y
+
+                          The NLINMIX Macro
+
+           Data Set                     : tree
+           Response                     : y
+           Fixed-Effect Parameters      : b1 b2 b3
+           Random-Effect Parameters     : u1
+           Expansion Point              : eblup
+
+
+Iteratively calling PROC MIXED.
+   PROC MIXED call 0
+   
+iteration = 0
+convergence criterion = .
+b1=192.68775379 b2=7.8565507688 b3=-0.002828579 COVP1=1262.8356069 COVP2=66.097041801
+   PROC MIXED call 1
+   
+iteration = 1
+convergence criterion = 0.0344641696
+b1=192.68758838 b2=7.8565643115 b3=-0.002828585 COVP1=1244.5510364 COVP2=65.950417624
+   PROC MIXED call 2
+   
+iteration = 2
+convergence criterion = 0.0019303568
+b1=191.19433836 b2=8.1369992331 b3=-0.002898754 COVP1=1245.5394581 COVP2=65.937456383
+   PROC MIXED call 3
+   
+iteration = 3
+convergence criterion = 0.0000409573
+b1=191.18732207 b2=8.1527369245 b3=-0.002901093 COVP1=1245.5660876 COVP2=65.937238661
+   PROC MIXED call 4
+   
+iteration = 4
+convergence criterion = 2.203275E-6
+b1=191.18510423 b2=8.1530708524 b3=-0.002901184 COVP1=1245.5660873 COVP2=65.937238646
+   PROC MIXED call 5
+   
+iteration = 5
+convergence criterion = 5.9644841E-8
+b1=191.185027 b2=8.1530888159 b3=-0.002901188 COVP1=1245.5660873 COVP2=65.937238646
+   PROC MIXED call 6
+   
+iteration = 6
+convergence criterion = 2.8882906E-9
+b1=191.18502303 b2=8.1530893022 b3=-0.002901188 COVP1=1245.5660873 COVP2=65.937238646
+NLINMIX convergence criteria met.
+NOTE: IML Ready
+NOTE: Module _MODEL defined.
+NOTE: Module _DERIVS defined.
+NOTE: Module _PSEUDODER defined.
+NOTE: Module _SUBJECT defined.
+NOTE: New storage library = WORK._NLMEM
+NOTE: The data set WORK._NLINMX2 has 35 observations and 7 variables.
+NOTE: Exiting IML.
+NOTE: Storage library WORK._NLMEM closed.
+NOTE: PROCEDURE IML used:
+      real time           0.30 seconds
+      cpu time            0.30 seconds
+      
+
+
+NOTE: There were 35 observations read from the dataset WORK._NLINMIX.
+NOTE: There were 35 observations read from the dataset WORK._NLINMX2.
+NOTE: The data set WORK._NLINMIX has 35 observations and 16 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 35 observations read from the dataset WORK._NLINMIX.
+NOTE: The PROCEDURE MEANS printed page 3.
+NOTE: PROCEDURE MEANS used:
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: There were 35 observations read from the dataset WORK._NLINMIX.
+NOTE: The data set WORK.DEBUG has 35 observations and 19 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+
+NOTE: There were 30 observations read from the dataset WORK.DEBUG.
+NOTE: The PROCEDURE PRINT printed page 4.
+NOTE: PROCEDURE PRINT used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+
+NOTE: Appending WORK.DEBUG to WORK.ALLDEBUG.
+3                                                    The SAS System                        14:39 Monday, October 28, 2002
+
+NOTE: There were 35 observations read from the dataset WORK.DEBUG.
+NOTE: 35 observations added.
+NOTE: The data set WORK.ALLDEBUG has 350 observations and 19 variables.
+NOTE: PROCEDURE APPEND used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+   PROC MIXED call 7
+
+NOTE: Convergence criteria met.
+NOTE: The data set WORK._SOLNR has 5 observations and 10 variables.
+NOTE: The data set WORK._COV has 2 observations and 3 variables.
+NOTE: The data set WORK._SOLN has 3 observations and 9 variables.
+NOTE: The data set WORK._FIT has 4 observations and 2 variables.
+NOTE: There were 35 observations read from the dataset WORK._NLINMIX.
+NOTE: There were 2 observations read from the dataset WORK._COVSAVE.
+NOTE: The PROCEDURE MIXED printed page 5.
+NOTE: PROCEDURE MIXED used:
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      1944:51   
+NOTE: There were 4 observations read from the dataset WORK._FIT.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.01 seconds
+      
+
+1945       
+1946       proc print data=alldebug;
+1947       run;
+
+NOTE: There were 350 observations read from the dataset WORK.ALLDEBUG.
+NOTE: The PROCEDURE PRINT printed pages 6-10.
+NOTE: PROCEDURE PRINT used:
+      real time           0.04 seconds
+      cpu time            0.05 seconds
+      
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           8.96 seconds
+      cpu time            7.38 seconds
+      

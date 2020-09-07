@@ -1,0 +1,241 @@
+1                                                          The SAS System                         11:27 Wednesday, November 20, 2002
+
+NOTE: Copyright (c) 1999 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Version 8 (TS M0)
+      Licensed to UNIVERSITY OF MICHIGAN, Site 0009403007.
+NOTE: This session is executing on the SunOS 5.6 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.06 seconds
+      cpu time            0.06 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /u11/sas800/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          %*include "&sysparm";
+2          
+3          %macro symcheck(name);
+4          %if %nrquote(&&&name)=%nrstr(&)&name %then %let rc=0;
+5          %else %let rc=1;
+6          %put rc=&rc;
+7          &rc
+8          %mend symcheck;
+9          
+10         
+11         %macro symvalue(name);
+12          %if %symcheck(&name)=0 %then %let rvalue=;
+13          %else %let rvalue=&&&name;
+14          %put rvalue=&rvalue;
+15          &rvalue
+16         %mend symvalue;
+17         
+18         %macro default(input_value,default_value);
+19           %let output_value=&input_value;
+20           %if %length(&input_value)=0 %then %let output_value=&default_value;
+21           &output_value
+22         %mend  default;
+23         
+24         %let data=tree;
+25         %let tol=;
+26         %let expand=;
+27         
+28         
+29         %let data    =%symvalue(data);
+rc=1
+rvalue=tree
+30         %let modinit =%symvalue(modinit);
+WARNING: Apparent symbolic reference MODINIT not resolved.
+rc=0
+rvalue=
+31         %let model   =%symvalue(model);
+WARNING: Apparent symbolic reference MODEL not resolved.
+rc=0
+rvalue=
+32         %let weight  =%symvalue(weight);
+WARNING: Apparent symbolic reference WEIGHT not resolved.
+rc=0
+rvalue=
+33         %let derivs  =%symvalue(derivs);
+WARNING: Apparent symbolic reference DERIVS not resolved.
+rc=0
+rvalue=
+34         %let tol     =%symvalue(tol);
+rc=1
+rvalue=
+35         %let parms   =%symvalue(parms);
+WARNING: Apparent symbolic reference PARMS not resolved.
+rc=0
+rvalue=
+36         %let stmts   =%symvalue(stmts);
+WARNING: Apparent symbolic reference STMTS not resolved.
+rc=0
+rvalue=
+37         %let expand  =%symvalue(expand);
+rc=1
+rvalue=
+38         %let converge=%symvalue(converge);
+WARNING: Apparent symbolic reference CONVERGE not resolved.
+rc=0
+rvalue=
+39         %let maxit   =%symvalue(maxit);
+WARNING: Apparent symbolic reference MAXIT not resolved.
+rc=0
+rvalue=
+40         %let switch  =%symvalue(switch);
+WARNING: Apparent symbolic reference SWITCH not resolved.
+rc=0
+rvalue=
+2                                                    The SAS System                    11:27 Wednesday, November 20, 2002
+
+41         %let append  =%symvalue(append);
+WARNING: Apparent symbolic reference APPEND not resolved.
+rc=0
+rvalue=
+42         %let procopt =%symvalue(procopt);
+WARNING: Apparent symbolic reference PROCOPT not resolved.
+rc=0
+rvalue=
+43         %let nlinopt =%symvalue(nlinopt);
+WARNING: Apparent symbolic reference NLINOPT not resolved.
+rc=0
+rvalue=
+44         %let nlinstmt=%symvalue(nlinstmt);
+WARNING: Apparent symbolic reference NLINSTMT not resolved.
+rc=0
+rvalue=
+45         %let outdata =%symvalue(outdata);
+WARNING: Apparent symbolic reference OUTDATA not resolved.
+rc=0
+rvalue=
+46         %let options =%symvalue(options);
+WARNING: Apparent symbolic reference OPTIONS not resolved.
+rc=0
+rvalue=
+47         %let nlmem   =%symvalue(nlmem);
+WARNING: Apparent symbolic reference NLMEM not resolved.
+rc=0
+rvalue=
+48         %let imlfun  =%symvalue(imlfun);
+WARNING: Apparent symbolic reference IMLFUN not resolved.
+rc=0
+rvalue=
+49         %let globvar =%symvalue(globvar);
+WARNING: Apparent symbolic reference GLOBVAR not resolved.
+rc=0
+rvalue=
+50         %let retain  =%symvalue(retain);
+WARNING: Apparent symbolic reference RETAIN not resolved.
+rc=0
+rvalue=
+51         %let next    =%symvalue(next);
+WARNING: Apparent symbolic reference NEXT not resolved.
+rc=0
+rvalue=
+52         %let xvar    =%symvalue(xvar);
+WARNING: Apparent symbolic reference XVAR not resolved.
+rc=0
+rvalue=
+53         %let tvar    =%symvalue(tvar);
+WARNING: Apparent symbolic reference TVAR not resolved.
+rc=0
+rvalue=
+54         %let savevar =%symvalue(savevar);
+WARNING: Apparent symbolic reference SAVEVAR not resolved.
+rc=0
+rvalue=
+55         %let dtmplt  =%symvalue(dtmplt);
+WARNING: Apparent symbolic reference DTMPLT not resolved.
+rc=0
+rvalue=
+56         %let debug   =%symvalue(debug);
+WARNING: Apparent symbolic reference DEBUG not resolved.
+rc=0
+rvalue=
+57         %let imlnlin =%symvalue(imlnlin);
+WARNING: Apparent symbolic reference IMLNLIN not resolved.
+rc=0
+rvalue=
+58         
+59         /* Default values assigned if blank */
+60         %let data     = %default(&data,    _last_);
+61         %let tol      = %default(&tol,     1e-5);
+62         %let expand   = %default(&expand,  zero);
+63         %let converge = %default(&converge,1e-8);
+64         %let maxit    = %default(&maxit,   30);
+65         %let switch   = %default(&switch,  0);
+66         %let outdata  = %default(&outdata, _outdata);
+67         %let next     = %default(&next,    1);
+68         %let imlnlin  = %default(&imlnlin, default_nlin default_objf
+69             default_initobjf);
+70         
+71         
+72         %let path=../..;
+73         filename  sasdata "&path/datasets/&data._dt.sas";
+74         filename  nlinmix "&path/nlmm800.sas";
+75         %include  sasdata;
+
+NOTE: The data set WORK.TREE has 35 observations and 4 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+119        %include  nlinmix / nosource;
+1357       
+1358       
+1359       Title "NLINMIX: Data=&data";
+1360       %nlinmix(data=&data,   /* _LAST_  */
+3                                                    The SAS System                    11:27 Wednesday, November 20, 2002
+
+1361          modinit=&modinit,
+1362          model=&model,
+1363          weight=&weight,
+1364          derivs=&derivs,
+1365          tol=&tol,           /* default 1e-5  */
+1366          parms=&parms,
+1367          stmts=&stmts,
+1368          expand=&expand,     /* zero */
+1369          converge=&converge, /* 1e-8 */
+1370          maxit=&maxit,       /* 30   */
+1371          switch=&switch,     /* 0    */
+1372          append=&append,
+1373          procopt=&procopt,
+1374          nlinopt=&nlinopt,
+1375          nlinstmt=&nlinstmt,
+1376          outdata=&outdata,   /*_nlinmix*/
+1377          options=&options,
+1378          nlmem=&nlmem,
+1379          imlfun=&imlfun,
+1380          globvar=&globvar,
+1381          retain=&retain,
+1382          next=&next,        /* 1 */
+1383          xvar=&xvar,
+1384          tvar=&tvar,
+1385          savevar=&savevar,
+1386          dtmplt= &dtmplt,
+1387          debug = &debug,
+1388          imlnlin=&imlnlin   /* default_nlin default_objf default_initobjf */
+1389       );
+ERROR: The NLINMIX MODEL= argument is not present.ERROR: The NLINMIX MODEL= argument is not present.ERROR: The NLINMIX MODEL= argument is not present.
+1390       
+
+ERROR: Errors printed on page 3.ERROR: Errors printed on page 3.ERROR: Errors printed on page 3.
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           0.36 seconds
+      cpu time            0.35 seconds
+      

@@ -1,0 +1,137 @@
+                                                     The SAS System                   11:40 Monday, February 10, 2003   1
+
+                                                   The Mixed Procedure
+
+                                                   Model Information
+
+                                 Data Set                     WORK._NLINMIX            
+                                 Dependent Variable           PSEUDO_G_T               
+                                 Weight Variable              _WEIGHT_                 
+                                 Covariance Structure         Unstructured             
+                                 Subject Effect               id                       
+                                 Estimation Method            REML                     
+                                 Residual Variance Method     Profile                  
+                                 Fixed Effects SE Method      Model-Based              
+                                 Degrees of Freedom Method    Containment              
+
+
+                                                 Class Level Information
+ 
+                                    Class    Levels    Values
+
+                                    id           10    2 8 12 13 29 42 50 55 59 63   
+
+
+                                                       Dimensions
+
+                                           Covariance Parameters             7
+                                           Columns in X                      5
+                                           Columns in Z Per Subject          3
+                                           Subjects                         10
+                                           Max Obs Per Subject              30
+                                           Observations Used               246
+                                           Observations Not Used            54
+                                           Total Observations              300
+
+
+                                                     Parameter Search
+ 
+     CovP1     CovP2     CovP3     CovP4     CovP5     CovP6     CovP7  Variance          Res Log Like  -2 Res Log Like
+
+  0.000128  -0.00209    0.1106  0.001487  -0.03120   0.05350  0.006436  0.006434             -956.9052        1913.8104
+
+
+                                                    Iteration History
+ 
+                               Iteration    Evaluations    -2 Res Log Like       Criterion
+
+                                       1              2      1913.81042911      0.00000000
+
+
+                                               Convergence criteria met.                    
+
+
+                                             Covariance Parameter Estimates
+ 
+                                            Cov Parm     Subject    Estimate
+
+                                            UN(1,1)      id         0.000128
+                                            UN(2,1)      id         -0.00210
+                                            UN(2,2)      id           0.1108
+                                            UN(3,1)      id         0.001488
+                                            UN(3,2)      id         -0.03131
+                                            UN(3,3)      id          0.05359
+                                            Residual                0.006434
+
+
+                                                     Fit Statistics
+
+                                       Res Log Likelihood                  -956.9
+                                       Akaike's Information Criterion      -963.9
+                                       Schwarz's Bayesian Criterion        -965.0
+                                       -2 Res Log Likelihood               1913.8
+
+
+                                            PARMS Model Likelihood Ratio Test
+ 
+                                              DF    Chi-Square      Pr > ChiSq
+
+                                               6          0.00          1.0000
+
+
+                                               Solution for Fixed Effects
+ 
+                                     Standard
+           Effect        Estimate       Error      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+           D_BETA1        0.02347    0.003990     215       5.88      <.0001      0.05     0.01560     0.03133
+           D_BETA2        -1.6476      0.1346     215     -12.24      <.0001      0.05     -1.9129     -1.3823
+           D_BETA3        -3.4031     0.07951     215     -42.80      <.0001      0.05     -3.5598     -3.2463
+           D_BETA4         278.84      2.2101     215     126.16      <.0001      0.05      274.48      283.19
+           D_BETA5        -0.2135      0.8615     215      -0.25      0.8045      0.05     -1.9116      1.4846
+
+
+                                               Solution for Random Effects
+ 
+                                       Std Err
+          Effect    id    Estimate        Pred      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+          D_U1       2    -0.01310    0.004588     215      -2.85      0.0047      0.05    -0.02214    -0.00405
+          D_U2       2      0.4756      0.1679     215       2.83      0.0051      0.05      0.1447      0.8065
+                                                     The SAS System                   11:40 Monday, February 10, 2003   2
+
+                                                   The Mixed Procedure
+
+                                               Solution for Random Effects
+ 
+                                       Std Err
+          Effect    id    Estimate        Pred      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+          D_U3       2    -0.08520      0.1215     215      -0.70      0.4839      0.05     -0.3247      0.1543
+          D_U1       8    -0.00642    0.004270     215      -1.50      0.1340      0.05    -0.01484    0.001994
+          D_U2       8      0.1876      0.2435     215       0.77      0.4418      0.05     -0.2923      0.6676
+          D_U3       8     -0.4644      0.1230     215      -3.78      0.0002      0.05     -0.7067     -0.2220
+          D_U1      12    -0.01229    0.004298     215      -2.86      0.0047      0.05    -0.02077    -0.00382
+          D_U2      12      0.3342      0.1556     215       2.15      0.0328      0.05     0.02757      0.6408
+          D_U3      12     -0.1087     0.08809     215      -1.23      0.2187      0.05     -0.2823     0.06498
+          D_U1      13    0.001629    0.004249     215       0.38      0.7018      0.05    -0.00675     0.01000
+          D_U2      13     -0.3252      0.2164     215      -1.50      0.1344      0.05     -0.7517      0.1014
+          D_U3      13      0.1060      0.1014     215       1.05      0.2970      0.05    -0.09385      0.3058
+          D_U1      29     0.02215    0.004098     215       5.40      <.0001      0.05     0.01407     0.03022
+          D_U2      29     -0.2963      0.1731     215      -1.71      0.0884      0.05     -0.6375     0.04493
+          D_U3      29      0.1499      0.1005     215       1.49      0.1373      0.05    -0.04817      0.3479
+          D_U1      42    -0.00098    0.004266     215      -0.23      0.8186      0.05    -0.00939    0.007430
+          D_U2      42    -0.08718      0.1794     215      -0.49      0.6274      0.05     -0.4407      0.2664
+          D_U3      42      0.2480     0.09449     215       2.62      0.0093      0.05     0.06176      0.4343
+          D_U1      50     0.01131    0.004156     215       2.72      0.0070      0.05    0.003118     0.01950
+          D_U2      50     -0.1470      0.2180     215      -0.67      0.5008      0.05     -0.5768      0.2827
+          D_U3      50      0.1668      0.1148     215       1.45      0.1477      0.05    -0.05951      0.3932
+          D_U1      55    -0.00030    0.004414     215      -0.07      0.9465      0.05    -0.00900    0.008404
+          D_U2      55     -0.1730      0.1629     215      -1.06      0.2894      0.05     -0.4940      0.1480
+          D_U3      55     0.03630      0.1460     215       0.25      0.8038      0.05     -0.2514      0.3240
+          D_U1      59    -0.00842    0.004126     215      -2.04      0.0424      0.05    -0.01656    -0.00029
+          D_U2      59     -0.2402      0.1745     215      -1.38      0.1701      0.05     -0.5842      0.1038
+          D_U3      59     -0.1811      0.1180     215      -1.53      0.1263      0.05     -0.4136     0.05146
+          D_U1      63    0.006431    0.004090     215       1.57      0.1173      0.05    -0.00163     0.01449
+          D_U2      63      0.2715      0.1589     215       1.71      0.0891      0.05    -0.04183      0.5847
+          D_U3      63      0.1323      0.1057     215       1.25      0.2119      0.05    -0.07600      0.3406

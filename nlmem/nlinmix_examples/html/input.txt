@@ -1,0 +1,68 @@
+
+/u11/HTML/USERS/pub/nlmem/nlinmix_examples/MAINexamples/input.txt
+
+name    value          
+----    -----
+data    tree           Select one
+        pheno
+
+
+1. For data=tree Help button with a description of the dataset.
+ 
+Dependent variable: Data name implicates dependent variable
+                    name or it can be selected by the user.
+                    For data=tree dependent var is y 
+
+Subject variable:  Same as with dependent var. tree
+
+Fixed effects:   Data name implicates a list of parameters.
+                 List of parameters is displayed or  
+                 User manually enters a list e.g.: b1 b2 b3
+
+-> name= betaparams  value=b1 b2 b3;
+
+
+Random effects: User specifies manually e.g. u1 u2
+--------------------------------------------------------------
+
+Initial values: User enters 3 numbers for fixed parameters.
+                b1=?
+                b2=?
+                b3=?
+
+-> name=params   value=%str(b1=# b2=# b3=#);
+
+model: predv = function(list of fixed and random)
+     d1=b1+u1;
+     d2=b2+u2;
+     d3=b3;
+         e=exp(d3*x);
+         den=1+d2*e;     
+         predv= d1/den;
+
+name=model value=%str(d1=b1+u1; d2=b2; ....predv=d1/den)
+
+
+STMTS in PROC/MIXED 
+   proc mixed data=_nlinmix <PROCOPT>
+       class tree ; ->User  Selects class variables if needed.
+       model pseudo_<dependent>=d_<b1> d_<b2> d_<b3>/ noint notest 
+solution cl; 
+If random effects then RANDOM statements:
+Ask how many random statements:
+ template(s) for the user:
+ random d_u1 d_u2 / subject = Extract from subject
+                              Allow user to change it
+                     solution cl (<- hard coded)       
+
+Other statements?
+
+
+name=stmts value=%str(class tree; ... til end; Including other statements
+               if any);
+
+expand = ZERO | EBLUP | manually
+
+          manually example: b1=0 b2=1 b3=0 (as many as parameters)
+
+name= expand value= ZERO 

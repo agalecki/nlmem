@@ -1,0 +1,193 @@
+/*-----------------------------------------------------------
+ TITLE
+ -----
+
+NLMEM: a set of SAS macros for fitting nonlinear mixed models specified 
+       using SAS/IML. 
+       Requires SAS/STAT, SAS/IML and NLINMIX macro for SAS Version 8.  
+
+
+SUPPORT
+-------
+
+Andrzej Galecki (agalecki@umich.edu) from the  University of Michigan
+Please send email with any suggestions or corrections.
+
+
+HISTORY
+ -------
+- Version for SAS 6.12 (not callable from NLINMIX)
+
+  Available at URL:
+  http://www-personal.umich.edu/~agalecki/.
+
+  Presented at the "Modelling Longitudinal and 
+  Spatially Correlated Data: Methods, Applications, and Future 
+  Directions" conference, 15-18 October, 1996 Nantucket Island.   
+
+  Related publication: Galecki, AT  "NLMEM: a new SAS/IML macro for 
+  hierarchical nonlinear models" in Computer Methods and Programs
+  in Biomedicine 55(1998), p. 207-216
+
+                                                       31Aug96 atg 
+
+
+- Version for SAS 8.00 (callable from NLINMIX)
+
+  Macro redesigned and syntax changed to accommodate changes in NLINMIX. 
+                                                       15Feb01 atg
+
+
+ DESCRIPTION
+ -----------
+ 
+ NLMEM is a set of SAS macros callable from NLINMIX. It can be considered
+ as an interface from  NLINMIX to SAS/IML. 
+ NLMEM retains all the benefits of NLINMIX while allowing the systematic part
+ of a model to be specified using IML syntax. Consequently, NLMEM allows
+ estimation of models which are not tractable using NLINMIX. In 
+ particular it allows us to address advanced population pharmacokinetics 
+ and pharmacodynamics models specified by ordinary differential equations.  
+ Available estimation methods are the same as in macro NLINMIX.
+  
+
+ SYNTAX
+ ------
+%nlinmix(
+modinit=,           --> Group 1 of arguments starts here
+model=,
+weight=,
+derivs=,
+
+retain=,            --> Group 2 of arguments starts here
+imlfun=,
+globvar=,
+next=1,
+xvar=,
+tvar=,
+savevar=,
+dtmplt=,
+debug=,
+imlnlin= default_nlin default_objf default_initobjf,
+
+data=,              -->  Group 3 of arguments starts here
+tol=,
+parms=,
+stmts=,   
+expand=,
+converge=,
+maxit=,
+switch=,
+nlmem =
+append=,
+procopt=,
+outdata=,
+options=
+);
+
+ where the arguments are divided in 3 groups as follows:
+
+Group 1 contains arguments which play the same role as in NLINMIX macro. They
+        have different syntax however.
+
+Group 2 contains arguments specific to NLMEM macro. There is no corresponding 
+        arguments in NLINMIX macro.
+
+Group 3 contains arguments which are common to NLINMIX and NLMEM so the reader 
+        is refered to NLINMIX documentation for their syntax description.
+
+
+Detailed definition of Group 1 arguments follows:
+
+model   specifies the nonlinear mixed model in terms of
+        SAS\IML statements. Input for IML code is contained in row vectors _b
+        and _u. 
+        Vector _b contains current values of fixed parameters in the same 
+        order as defined in PARMS argument and _u contains random effects 
+        in the same order as they appear in STMTS= argument.
+        Variables (vectors) from the input dataset can also be used.
+        
+        The code specified in the model argument should return vector
+        PREDV of predicted values. The number of elements in PREDV is determined
+        by the value of the NEXT macro variable.
+
+modinit  specifies modeling SAS/IML statements to be called only
+         once at the beginning of the modeling step. This
+         option is usually used in conjunction with
+         initializing recursively defined models.
+
+derivs   specifies partial derivatives of predicted values of the model wrt 
+         fixed _b and random _u using SAS/IML. Input vectors for IML 
+         code are _b and _u. The code in derivs argument should return
+         _db and _du matrices of partial derivatives. If derivs is blank
+         numerical derivatives are calculated using central difference 
+         with width tol*(1+abs(parm)). 
+
+weight   specifies vector of weights values as a function of _b, _u and
+         other auxilary variables.
+    
+
+Detailed definition of Group 2 arguments follows:
+
+retain  It is needed for recursively defined models to perform nonlinear
+        optimization in SAS/IML. See pheno examples.
+
+imlfun  points to a macro which contains user defined SAS/IML functions
+        and/or subroutines. Some of macro arguments (globvar,next, 
+        xvar,tvar, savevar, dtmplt, imlnlin, debug) can also be defined here.
+
+globvar contains list of vectors (or matrices) from the global list.
+        The global variables can be used for passing information 
+        between codes specified in model, weight, imlinit and retain
+        arguments.
+
+next Indicates how many records from an input dataset are read at a time.
+     It can be constant or ID variable name from an input dataset.
+     Default is 1.
+                                  
+xvar Contains a list of time independent variables in the input DATA.
+     By default NONE of the variables is time independent, 
+     except ID variable (if any) specified in next= argument. 
+                         
+
+tvar Contains a list of time dependent variables in the input DATA. 
+     By default all vars in DATA are time-dependent except of those listed
+     in xvar.
+
+savevar  List of output vectors to save in _NLINMIX dataset. Note: If 
+         variable _weight_ is created (by weight macro argument)
+         then _weight_ is saved automatically. Note that all vectors
+         listed in savevar have also to be listed in globvar.
+                         
+dtmplt  Indicates which derivs wrt _b or _u returned by 
+        derivs macro argument are not subsequently modified using finite
+        difference derivatives.
+                         
+imlnlin Assuming that NLINMETHOD=2 it points to up to 3 user defined macros
+         used in SAS\IML optimization of the 
+        _objf function. By default 3 macros used in the NLMEM execution are: 
+
+       default_nlin        NLPLM: solves nonlinear least-squares
+                                     problem 
+       default_objf        Returns weighted vector of 
+                                     differences 
+       default_initobjf    free _objf _dobjf 
+
+
+debug  Points to a user defined macro for debugging.
+
+
+ EXAMPLE SYNTAX
+ --------------
+           
+To invoke macro use syntax similar to the following:
+ 
+filename nlinmix 'nlmm800.sas';
+filename nlmem   'nlmem.sas';
+
+%include nlinmix;
+
+%nlinmix( <arguments>,
+          nlmem = nlmem
+);
+-----------------------------------------------------------------*/

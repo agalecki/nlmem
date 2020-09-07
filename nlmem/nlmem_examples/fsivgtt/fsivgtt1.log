@@ -1,0 +1,272 @@
+1                                                          The SAS System                            11:09 Monday, February 10, 2003
+
+NOTE: Copyright (c) 1999 by SAS Institute Inc., Cary, NC, USA. 
+NOTE: SAS (r) Proprietary Software Version 8 (TS M0)
+      Licensed to UNIVERSITY OF MICHIGAN, Site 0009403007.
+NOTE: This session is executing on the SunOS 5.6 platform.
+
+
+
+
+This message is contained in the SAS news file, and is presented upon
+initialization.  Edit the files "news" in the "misc/base" directory to
+display site-specific news and information in the program log.
+The command line option "-nonews" will prevent this display.
+
+
+
+NOTE: SAS initialization used:
+      real time           0.08 seconds
+      cpu time            0.07 seconds
+      
+
+NOTE: AUTOEXEC processing beginning; file is /u11/sas800/autoexec.sas.
+
+
+NOTE: AUTOEXEC processing completed.
+
+1          /*----------------------------------------------------------------*/
+2          /*--                                                            --*/
+3          /*-- Title:    FSIVGTT  data.                                   --*/
+4          /*-- Filename: ivgtt_example.sas                                --*/
+5          /*--           Invokes minmod.inc and fsivgtt_dt.sas            --*/
+6          /*-- Date:     August 1, 2002                                   --*/
+7          /*--                                                            --*/
+8          /*-- Ref:                                                       --*/
+9          /*--                                                            --*/
+10         /*--                                                            --*/
+11         /*----------------------------------------------------------------*/
+12         
+13         
+14         libname lib '.';
+NOTE: Libref LIB was successfully assigned as follows: 
+      Engine:        V8 
+      Physical Name: /u11/HTML/USERS/pub/nlmem/nlmem_examples/fsivgtt
+15         
+16         %let path=../..;
+17         filename ivgtt_dt "&path/datasets/fsivgtt_dt.sas";
+18         filename nlinmix  "&path/nlmm800.sas";
+19         filename nlmem    "&path/nlmem.sas";
+20         filename minmod   "minmod.inc";
+21         %include nlinmix / nosource;
+1259       %include ivgtt_dt;
+
+NOTE: The data set WORK.FSIVGTT has 300 observations and 5 variables.
+NOTE: DATA statement used:
+      real time           0.02 seconds
+      cpu time            0.03 seconds
+      
+
+1569       
+1570       
+1571       %macro useriml;
+1572       /* User defined SAS/IML functions */
+1573       %include minmod;          /* Minimal model definition */
+1574       
+1575       start bsm(b,u) global(der_bu,age);
+1576       /* Between-subject model */
+1577       /* Derivs for: p1,p2,p3,G0
+1578                 wrt b and u */
+1579       
+1580       p1      = b[1] + u[1];
+1581       logp2   = b[2] + u[2];
+1582       logsi   = b[3] + u[3] + (age-70)*b[5]/100; /* Linear model for log(si) */
+1583       G0      = b[4];
+1584       
+1585       db      = i(4) || j(4,1,0);
+1586       db[3,5] = (age-70)/100;
+1587       
+1588       du      = {1 0 0,
+1589                  0 1 0,
+1590                  0 0 1,
+1591                  0 0 0};
+1592       
+1593       
+1594       logp3   = logp2 + logsi;
+1595       dlogp3b = { 1  1}* db[2:3,];
+1596       dlogp3u = { 1  1}* du[2:3,];
+1597       
+1598       p2      = 10**(logp2);
+1599       db[2,2] = p2* db[2,2]*log(10);
+1600       du[2,2] = p2* du[2,2]*log(10);
+1601       
+1602       p3      = 10**(logp3);
+1603       db[3,]  = p3* dlogp3b*log(10);
+1604       du[3,]  = p3* dlogp3u*log(10);
+1605       
+1606       der_bu  = db || du;
+1607       return(p1//p2//p3//G0);
+1608       finish bsm;
+1609       
+2                                                    The SAS System                       11:09 Monday, February 10, 2003
+
+1610       start dbsm(b,u) global(der_bu);;
+1611       return(der_bu);
+1612       finish;
+1613       
+1614       start wghtc(dummy) global(g_t,time, predv,weight);
+1615       
+1616       /* Vector of weights */
+1617       g_weight= choose(time>=8,1,0);  /* Zero-weighted measures for
+1618                                                time<8 mins */
+1619       g_weight[6]=50;                 /* Overweighted measure for time=8 */
+1620       w= g_weight/(g_t#g_t);
+1621       return(w);
+1622       finish;
+1623       
+1624       
+1625       %mend useriml;
+1626       
+1627       %nlinmix(data = fsivgtt,
+1628                next = id,
+1629                xvar = age,
+1630                stmts   =  %str(
+1631                class id;
+1632                model pseudo_g_t = d_beta1 d_beta2 d_beta3  d_beta4 d_beta5
+1633                                      / noint notest solution cl;
+1634                random d_u1 d_u2 d_u3 / subject=id solution cl type=un;
+1635                weight _weight_;
+1636                ods output Iterhistory=iter;
+1637                             ),
+1638                globvar = predv dpredv dd  g_b i_b  x_solv ins_action,
+1639                model=%str(
+1640                  g_b=g_t[1];  /* Baseline glucose  */
+1641                  i_b=i_t[1];  /* Baseline insulin */
+1642       
+1643                  /* Between subject model */
+1644                  _d=bsm(_b,_u);
+1645                  der_bu=dbsm(_b,_u);
+1646       
+1647                  /* Within-subject model */
+1648                  *scale = {0.01 0.01 0.00001 100};
+1649                  scale = {0.01 1 1 100};
+1650                  d=_d # t(scale);
+1651                  g_solv = glc_solv(d);   /* Solving ODE       */
+1652                  predv  = g_solv[,1];    /* Predicted glucose */
+1653                  x_solv = g_solv[,2];    /* Predicted glucose in a remote compartment */
+1654                  jacs   = g_solv[,3:6];  /* Solution for sensitivity eqs */
+1655                  jacs   = jacs # scale;
+1656                  dpredv = jacs * der_bu;
+1657                  ins_action = 100*x_solv/(d[1]+x_solv);       /* Insulin action calculated */
+1658       ),
+1659              derivs  =  %str(
+1660                         _db=dpredv[,1:5]; /* Derivatives wrt _b extracted */
+1661                         _du=dpredv[,6:8]; /* Derivatives wrt _u extracted */
+1662                         ),
+1663              savevar =  x_solv ins_action,
+1664              weight  =  %str( _weight_= wghtc(.);),
+1665              parms   =  %str(beta1=2  beta2=-2  beta3=-3  beta4=2.5 beta5=0),
+1666              expand  =  zero,
+1667              imlfun  =  useriml,         /* Points to a SAS macro with a user defined SAS/IML functions */
+1668              converge=  1e-3,
+1669              options = skipnlin,         /* Skips initial call to a nonlinear regression */
+1670              nlmem   =  nlmem /nosource  /* Points to NLMEM macro source code */
+1671       );
+
+                          The NLINMIX Macro
+
+           Data Set                     : fsivgtt
+           Response                     : g_t
+           Fixed-Effect Parameters      : beta1 beta2 beta3 beta4 beta5
+           Random-Effect Parameters     : u1 u2 u3
+           Expansion Point              : zero
+
+
+Iteratively calling PROC MIXED.
+   PROC MIXED call 0
+   
+iteration = 0
+convergence criterion = .
+beta1=2 beta2=-2 beta3=-3 beta4=2.5 beta5=0 COVP1=1.1746241764 COVP2=-0.24449581 COVP3=0.1281913522 COVP4=0.2821496047 
+COVP5=-0.08447198 COVP6=0.0917243775 COVP7=0.0070584412
+   PROC MIXED call 1
+   
+iteration = 1
+convergence criterion = 0.1198964
+beta1=2.5665488333 beta2=-1.758825439 beta3=-3.346500877 beta4=2.7976281165 beta5=-0.222908371 COVP1=1.1513317015 
+COVP2=-0.1383328 COVP3=0.107089499 COVP4=0.1622532047 COVP5=-0.027897897 COVP6=0.057162016 COVP7=0.0065430747
+   PROC MIXED call 2
+   
+iteration = 2
+convergence criterion = 0.0933284864
+beta1=2.3520971831 beta2=-1.653280319 beta3=-3.393710744 beta4=2.7873904294 beta5=-0.284633299 COVP1=1.269844353 
+COVP2=-0.207799313 COVP3=0.1084478359 COVP4=0.1518566818 COVP5=-0.030726146 COVP6=0.053407458 COVP7=0.0064594678
+   PROC MIXED call 3
+   
+iteration = 3
+convergence criterion = 0.0064065851
+beta1=2.346366506 beta2=-1.649230488 beta3=-3.401053937 beta4=2.7882853731 beta5=-0.212037992 COVP1=1.2776137034 
+COVP2=-0.208821577 COVP3=0.1099962336 COVP4=0.1488150322 COVP5=-0.031094514 COVP6=0.0533909715 COVP7=0.0064380419
+   PROC MIXED call 4
+                                                     The SAS System
+
+   
+iteration = 4
+convergence criterion = 0.004810643
+beta1=2.3463726974 beta2=-1.647738863 beta3=-3.402906149 beta4=2.7883265678 beta5=-0.218444577 COVP1=1.2790180753 
+COVP2=-0.209635039 COVP3=0.1107444294 COVP4=0.1487218582 COVP5=-0.031256306 COVP6=0.0535191878 COVP7=0.0064360459
+   PROC MIXED call 5
+   
+iteration = 5
+convergence criterion = 0.0005098568
+beta1=2.3476355487 beta2=-1.648181346 beta3=-3.403002582 beta4=2.7884677829 beta5=-0.213633934 COVP1=1.2790403183 
+COVP2=-0.209352838 COVP3=0.1105765074 COVP4=0.1487307932 COVP5=-0.031187269 COVP6=0.0534879299 COVP7=0.0064353192
+NLINMIX convergence criteria met.
+NOTE: IML Ready
+NOTE: Module _MODEL defined.
+NOTE: Module _WEIGHT_ defined.
+NOTE: Module _DERIVS defined.
+NOTE: Module _SAVEVAR defined.
+NOTE: Module _PSEUDODER defined.
+NOTE: Module _SUBJECT defined.
+NOTE: New storage library = WORK._NLMEM
+NOTE: The data set WORK._NLINMX2 has 300 observations and 14 variables.
+NOTE: Exiting IML.
+NOTE: Storage library WORK._NLMEM closed.
+NOTE: 71 workspace compresses.
+NOTE: PROCEDURE IML used:
+      real time           3.90 seconds
+      cpu time            3.51 seconds
+      
+
+
+NOTE: There were 300 observations read from the dataset WORK._NLINMIX.
+NOTE: There were 300 observations read from the dataset WORK._NLINMX2.
+NOTE: The data set WORK._NLINMIX has 300 observations and 28 variables.
+NOTE: DATA statement used:
+      real time           0.01 seconds
+      cpu time            0.02 seconds
+      
+
+   PROC MIXED call 6
+
+NOTE: 54 observations are not included because of missing values.
+NOTE: Convergence criteria met.
+NOTE: The data set WORK._SOLNR has 30 observations and 10 variables.
+NOTE: The data set WORK._COV has 7 observations and 3 variables.
+NOTE: The data set WORK._SOLN has 5 observations and 9 variables.
+NOTE: The data set WORK._FIT has 4 observations and 2 variables.
+NOTE: The data set WORK.ITER has 1 observations and 4 variables.
+NOTE: There were 300 observations read from the dataset WORK._NLINMIX.
+NOTE: There were 7 observations read from the dataset WORK._COVSAVE.
+NOTE: The PROCEDURE MIXED printed pages 1-2.
+NOTE: PROCEDURE MIXED used:
+      real time           0.13 seconds
+      cpu time            0.11 seconds
+      
+
+
+NOTE: Numeric values have been converted to character values at the places given by: (Line):(Column).
+      2403:51   
+NOTE: There were 4 observations read from the dataset WORK._FIT.
+NOTE: DATA statement used:
+      real time           0.00 seconds
+      cpu time            0.00 seconds
+      
+
+
+NOTE: SAS Institute Inc., SAS Campus Drive, Cary, NC USA 27513-2414
+NOTE: The SAS System used:
+      real time           28.55 seconds
+      cpu time            27.29 seconds
+      

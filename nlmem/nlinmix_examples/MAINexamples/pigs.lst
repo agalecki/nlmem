@@ -1,0 +1,117 @@
+                                                     The SAS System                    12:21 Friday, October 25, 2002   1
+
+                                                   The Mixed Procedure
+
+                                                   Model Information
+
+                                 Data Set                     WORK._NLINMIX            
+                                 Dependent Variable           pseudo_y                 
+                                 Covariance Structure         Unstructured             
+                                 Subject Effect               pig                      
+                                 Estimation Method            REML                     
+                                 Residual Variance Method     Profile                  
+                                 Fixed Effects SE Method      Model-Based              
+                                 Degrees of Freedom Method    Containment              
+
+
+                                                 Class Level Information
+ 
+                                    Class    Levels    Values
+
+                                    pig           8    1 2 3 4 5 6 7 8               
+
+
+                                                       Dimensions
+
+                                           Covariance Parameters             4
+                                           Columns in X                      3
+                                           Columns in Z Per Subject          2
+                                           Subjects                          8
+                                           Max Obs Per Subject              10
+                                           Observations Used                80
+                                           Observations Not Used             0
+                                           Total Observations               80
+
+
+                                                     Parameter Search
+ 
+              CovP1       CovP2       CovP3       CovP4    Variance            Res Log Like    -2 Res Log Like
+
+            0.06176    -0.02965     0.01667    0.009186    0.009186                 57.7735          -115.5470
+
+
+                                                    Iteration History
+ 
+                               Iteration    Evaluations    -2 Res Log Like       Criterion
+
+                                       1              1      -115.54699490      0.00000000
+
+
+                                               Convergence criteria met.                    
+
+
+                                             Covariance Parameter Estimates
+ 
+                                            Cov Parm     Subject    Estimate
+
+                                            UN(1,1)      pig         0.06176
+                                            UN(2,1)      pig        -0.02965
+                                            UN(2,2)      pig         0.01667
+                                            Residual                0.009186
+
+
+                                                     Fit Statistics
+
+                                       Res Log Likelihood                    57.8
+                                       Akaike's Information Criterion        53.8
+                                       Schwarz's Bayesian Criterion          53.6
+                                       -2 Res Log Likelihood               -115.5
+
+
+                                            PARMS Model Likelihood Ratio Test
+ 
+                                              DF    Chi-Square      Pr > ChiSq
+
+                                               3          0.00          1.0000
+
+
+                                               Solution for Fixed Effects
+ 
+                                    Standard
+            Effect      Estimate       Error      DF    t Value    Pr > |t|     Alpha       Lower       Upper
+
+            d_v           0.2011    0.009893      63      20.33      <.0001      0.05      0.1814      0.2209
+            d_k           2.3997      0.2002      63      11.99      <.0001      0.05      1.9996      2.7998
+            d_d           0.4423     0.05733      63       7.71      <.0001      0.05      0.3277      0.5568
+
+
+                                              Solution for Random Effects
+ 
+                                                        Std Err
+                          Effect    pig    Estimate        Pred      DF    t Value    Pr > |t|
+
+                          d_kz      1       -0.1653      0.1267      63      -1.30      0.1969
+                          d_dz      1        0.1064     0.05990      63       1.78      0.0804
+                          d_kz      2       -0.2435      0.1265      63      -1.92      0.0588
+                          d_dz      2        0.1212     0.06008      63       2.02      0.0479
+                          d_kz      3       -0.2287      0.1263      63      -1.81      0.0750
+                          d_dz      3       0.09701     0.05977      63       1.62      0.1096
+                          d_kz      4        0.1886      0.1257      63       1.50      0.1386
+                          d_dz      4      -0.08349     0.05739      63      -1.45      0.1507
+                                                     The SAS System                    12:21 Friday, October 25, 2002   2
+
+                                                   The Mixed Procedure
+
+                                              Solution for Random Effects
+ 
+                                                        Std Err
+                          Effect    pig    Estimate        Pred      DF    t Value    Pr > |t|
+
+                          d_kz      5       -0.2131      0.1268      63      -1.68      0.0977
+                          d_dz      5        0.1300     0.06019      63       2.16      0.0347
+                          d_kz      6        0.2176      0.1250      63       1.74      0.0867
+                          d_dz      6       -0.1443     0.05655      63      -2.55      0.0132
+                          d_kz      7        0.1988      0.1255      63       1.58      0.1181
+                          d_dz      7       -0.1040     0.05711      63      -1.82      0.0733
+                          d_kz      8        0.2456      0.1254      63       1.96      0.0546
+                          d_dz      8       -0.1228     0.05685      63      -2.16      0.0345
