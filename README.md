@@ -1,3 +1,5 @@
 # nlmem
-NLMEM SAS macro 
+
+NLMEM SAS/IML macro 
+
 Initial version copied from http://www-personal.umich.edu/~agalecki/nlmem/
